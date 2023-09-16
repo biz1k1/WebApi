@@ -26,12 +26,14 @@ namespace CashbackApi.Controllers {
 
         [HttpPost]
         [Route(template:"AddCategory")]
-        public async Task<IActionResult> AddCategory(string category,double procent ){
+        public async Task<IActionResult> AddCategory(int id,string category,double procent ){
+            var ExistCard = await _context.CardInfo.FirstOrDefaultAsync(x => x.CardId == id);
+            if (ExistCard == null) return NotFound();
             var NewCategory = new Categories {
-                Category = category,
-                CashBackCategory = procent,
+                CategoryName = category,
+                CategoryValue = procent,
             };
-            _context.Category.AddRange (NewCategory);
+            ExistCard.Category.Add(NewCategory);
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -52,8 +54,8 @@ namespace CashbackApi.Controllers {
             if (CategoryExist == null) {
                 return NotFound();
             }
-            CategoryExist.Category = category;
-            CategoryExist.CashBackCategory = cashbackcategory;
+            CategoryExist.CategoryName = category;
+            CategoryExist.CategoryValue = cashbackcategory;
             await _context.SaveChangesAsync();
             return NoContent();
         }

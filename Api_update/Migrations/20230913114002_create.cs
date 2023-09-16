@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CashbackApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Create : Migration
+    public partial class create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,8 +33,8 @@ namespace CashbackApi.Migrations
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CashBackCategory = table.Column<double>(type: "float", nullable: false)
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryValue = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,40 +42,40 @@ namespace CashbackApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardInfosCategories",
+                name: "CategoryCard",
                 columns: table => new
                 {
-                    CardinfosCardId = table.Column<int>(type: "int", nullable: false),
-                    CategoriesCategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    CardId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardInfosCategories", x => new { x.CardinfosCardId, x.CategoriesCategoryId });
+                    table.PrimaryKey("PK_CategoryCard", x => new { x.CategoryId, x.CardId });
                     table.ForeignKey(
-                        name: "FK_CardInfosCategories_CardInfo_CardinfosCardId",
-                        column: x => x.CardinfosCardId,
+                        name: "FK_CategoryCard_CardInfo_CardId",
+                        column: x => x.CardId,
                         principalTable: "CardInfo",
                         principalColumn: "CardId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CardInfosCategories_Category_CategoriesCategoryId",
-                        column: x => x.CategoriesCategoryId,
+                        name: "FK_CategoryCard_Category_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardInfosCategories_CategoriesCategoryId",
-                table: "CardInfosCategories",
-                column: "CategoriesCategoryId");
+                name: "IX_CategoryCard_CardId",
+                table: "CategoryCard",
+                column: "CardId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CardInfosCategories");
+                name: "CategoryCard");
 
             migrationBuilder.DropTable(
                 name: "CardInfo");

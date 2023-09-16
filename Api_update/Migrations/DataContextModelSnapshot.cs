@@ -22,21 +22,6 @@ namespace CashbackApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CardInfosCategories", b =>
-                {
-                    b.Property<int>("CardinfosCardId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoriesCategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CardinfosCardId", "CategoriesCategoryId");
-
-                    b.HasIndex("CategoriesCategoryId");
-
-                    b.ToTable("CardInfosCategories");
-                });
-
             modelBuilder.Entity("CashbackApi.Models.CardInfos", b =>
                 {
                     b.Property<int>("CardId")
@@ -73,29 +58,44 @@ namespace CashbackApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
-                    b.Property<double>("CashBackCategory")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Category")
+                    b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("CategoryValue")
+                        .HasColumnType("float");
 
                     b.HasKey("CategoryId");
 
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("CardInfosCategories", b =>
+            modelBuilder.Entity("CategoryCard", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryId", "CardId");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("CategoryCard");
+                });
+
+            modelBuilder.Entity("CategoryCard", b =>
                 {
                     b.HasOne("CashbackApi.Models.CardInfos", null)
                         .WithMany()
-                        .HasForeignKey("CardinfosCardId")
+                        .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CashbackApi.Models.Categories", null)
                         .WithMany()
-                        .HasForeignKey("CategoriesCategoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

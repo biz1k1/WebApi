@@ -241,3 +241,7 @@ D:\visual_studio\repositoryi\Api_update\obj\Debug\net7.0\refint\CashbackApi.dll
 D:\visual_studio\repositoryi\Api_update\obj\Debug\net7.0\CashbackApi.pdb
 D:\visual_studio\repositoryi\Api_update\obj\Debug\net7.0\CashbackApi.genruntimeconfig.cache
 D:\visual_studio\repositoryi\Api_update\obj\Debug\net7.0\ref\CashbackApi.dll
+D:\visual_studio\repositoryi\Api_update\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\visual_studio\repositoryi\Api_update\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\visual_studio\repositoryi\Api_update\bin\Debug\net7.0\Newtonsoft.Json.dll
+D:\visual_studio\repositoryi\Api_update\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll

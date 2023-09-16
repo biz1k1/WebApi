@@ -16,28 +16,36 @@ namespace CashbackApi.Controllers {
         [HttpGet]
         [Route(template:"GetAll")]
         public async Task<IActionResult> Get() {
-            return Ok(await _context.CardInfo.ToListAsync());
+            return Ok(await _context.CardInfo.Include(x => x.Category).ToListAsync());
         }
         [HttpGet]
         [Route(template: "GetById")]
         public async Task<IActionResult> GetId(int id) {
-            var cashback = await _context.CardInfo.FirstOrDefaultAsync(x => x.CardId == id);
+            var cashback = await _context.CardInfo.Include(x=>x.Category).FirstOrDefaultAsync(x => x.CardId == id);
             if (cashback == null) return NotFound();
             return Ok(cashback);
         }
         [HttpPost]
         [Route(template: "AddCard")]
-        public async Task<IActionResult> AddCashback(string cardName,string bankType,string bankCard) {
+        public async Task<IActionResult> AddCashback(string cardName, string bankType, string bankCard) {
             var NewCard = new CardInfos {
                 CardName = cardName,
                 BankType = bankType,
                 BankCard = bankCard,
                 LastUpdate = DateTime.Now,
             };
-            _context.CardInfo.Add(NewCard);
+            _context.CardInfo.AddRange(NewCard);
             await _context.SaveChangesAsync();
             return Ok();
         }
+        //[HttpPost]
+        //[Route(template: "AddCard")]
+        //public async Task<IActionResult> AddCashback(CardInfos card) {
+            
+        //    _context.CardInfo.AddRange(card);
+        //    await _context.SaveChangesAsync();
+        //    return Ok();
+        //}
         [HttpDelete]
         [Route(template: "DeleteCard")]
         public async Task<IActionResult> DeleteCashback(int id) {
@@ -63,3 +71,4 @@ namespace CashbackApi.Controllers {
 
     }
 }
+
