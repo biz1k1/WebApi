@@ -1,10 +1,12 @@
 ﻿using CashbackApi.Data;
 using CashbackApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace CashbackApi.Controllers {
+    //[Authorize]
     [ApiController]
     [Route(template: "[controller]")]
     public class CardInfocontroller : ControllerBase {
@@ -27,25 +29,13 @@ namespace CashbackApi.Controllers {
         }
         [HttpPost]
         [Route(template: "AddCard")]
-        public async Task<IActionResult> AddCashback(string cardName, string bankType, string bankCard) {
-            var NewCard = new CardInfos {
-                CardName = cardName,
-                BankType = bankType,
-                BankCard = bankCard,
-                LastUpdate = DateTime.Now,
-            };
-            _context.CardInfo.AddRange(NewCard);
+        public async Task<IActionResult> AddCashback(CardInfos card) {
+            var ExistBankCard = await _context.CardInfo.FirstOrDefaultAsync(x => x.BankCard== card.BankCard);
+            if (ExistBankCard?.BankCard != null) return Ok("Duplicate BankCard");
+            _context.CardInfo.AddRange(card);
             await _context.SaveChangesAsync();
             return Ok();
         }
-        //[HttpPost]
-        //[Route(template: "AddCard")]
-        //public async Task<IActionResult> AddCashback(CardInfos card) {
-            
-        //    _context.CardInfo.AddRange(card);
-        //    await _context.SaveChangesAsync();
-        //    return Ok();
-        //}
         [HttpDelete]
         [Route(template: "DeleteCard")]
         public async Task<IActionResult> DeleteCashback(int id) {
@@ -58,12 +48,12 @@ namespace CashbackApi.Controllers {
         }
         [HttpPatch]
         [Route(template: "UpdateCard")]
-        public async Task<IActionResult> UpdateCashback(int Id,string cardName, string bankType, string bankCard) {
-            var ExistCard = await _context.CardInfo.FirstOrDefaultAsync(x => x.CardId == Id);
+        public async Task<IActionResult> UpdateCashback(int id,CardInfos card) {
+            var ExistCard = await _context.CardInfo.FirstOrDefaultAsync(x => x.CardId == id);
             if (ExistCard == null) return NotFound();
-            ExistCard.CardName = cardName;
-            ExistCard.BankType = bankType;
-            ExistCard.BankCard = bankCard;
+            ExistCard.CardName = card.CardName;
+            ExistCard.BankType = card.BankType;
+            ExistCard.BankCard = card.BankCard;
             ExistCard.LastUpdate = DateTime.Now;
             await _context.SaveChangesAsync();
             return NoContent();

@@ -1,9 +1,14 @@
 ﻿using CashbackApi.Data;
 using CashbackApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Net;
+using System.Net.Http;
 
 namespace CashbackApi.Controllers {
+    //[Authorize]
     [ApiController]
     [Route(template: "[controller]")]
     public class CategoryController : ControllerBase {
@@ -26,13 +31,11 @@ namespace CashbackApi.Controllers {
 
         [HttpPost]
         [Route(template:"AddCategory")]
-        public async Task<IActionResult> AddCategory(int id,string category,double procent ){
+        public async Task<IActionResult> AddCategory(int id,Categories NewCategory ){
             var ExistCard = await _context.CardInfo.FirstOrDefaultAsync(x => x.CardId == id);
+            var ExistCategoryName= await _context.Category.FirstOrDefaultAsync(x => x.CategoryName == NewCategory.CategoryName);
+            if (ExistCategoryName?.CategoryName!=null) return Ok("Duplicate category");
             if (ExistCard == null) return NotFound();
-            var NewCategory = new Categories {
-                CategoryName = category,
-                CategoryValue = procent,
-            };
             ExistCard.Category.Add(NewCategory);
             await _context.SaveChangesAsync();
             return Ok();
@@ -49,13 +52,13 @@ namespace CashbackApi.Controllers {
         }
         [HttpPatch]
         [Route(template: "UpdateCategory")]
-        public async Task<IActionResult> UpdateCategory(int id,string category, double cashbackcategory) {
+        public async Task<IActionResult> UpdateCategory(int id, Categories category) {
             var CategoryExist = await _context.Category.FirstOrDefaultAsync(x => x.CategoryId == id);
             if (CategoryExist == null) {
                 return NotFound();
             }
-            CategoryExist.CategoryName = category;
-            CategoryExist.CategoryValue = cashbackcategory;
+            CategoryExist.CategoryName = category.CategoryName;
+            CategoryExist.CategoryValue = category.CategoryValue;
             await _context.SaveChangesAsync();
             return NoContent();
         }
